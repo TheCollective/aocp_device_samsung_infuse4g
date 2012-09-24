@@ -14,7 +14,7 @@ $(call inherit-product, device/samsung/infuse4g/full_infuse4g.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := infuse4g
-PRODUCT_NAME := cm_infuse4g
+PRODUCT_NAME := aocp_infuse4g
 PRODUCT_BRAND := samsung
 PRODUCT_MODEL := SGH-I997
 
