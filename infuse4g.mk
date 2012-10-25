@@ -53,6 +53,7 @@ PRODUCT_COPY_FILES += \
 	device/samsung/infuse4g/init.aries.usb.rc:root/init.aries.usb.rc \
 	device/samsung/infuse4g/init.aries.usb.rc:recovery/root/usb.rc \
 	device/samsung/infuse4g/ueventd.aries.rc:root/ueventd.aries.rc \
+	device/samsung/infuse4g/fstab.aries:root/fstab.aries \
 	device/samsung/infuse4g/lpm.rc:root/lpm.rc
 
 # Prebuilt kl keymaps
@@ -77,17 +78,17 @@ PRODUCT_PACKAGES += \
 
 # These are the OpenMAX IL configuration files
 PRODUCT_COPY_FILES += \
-	device/samsung/aries-common/sec_mm/sec_omx/sec_omx_core/secomxregistry:system/etc/secomxregistry \
+	hardware/samsung/exynos3/s5pc110/sec_mm/sec_omx/sec_omx_core/secomxregistry:system/etc/secomxregistry \
 	device/samsung/aries-common/media_profiles.xml:system/etc/media_profiles.xml \
 	device/samsung/aries-common/media_codecs.xml:system/etc/media_codecs.xml
 
 # These are the OpenMAX IL modules
 PRODUCT_PACKAGES += \
-	libSEC_OMX_Core.aries \
-	libOMX.SEC.AVC.Decoder.aries \
-	libOMX.SEC.M4V.Decoder.aries \
-	libOMX.SEC.M4V.Encoder.aries \
-	libOMX.SEC.AVC.Encoder.aries
+	libSEC_OMX_Core \
+	libOMX.SEC.AVC.Decoder \
+	libOMX.SEC.M4V.Decoder \
+	libOMX.SEC.M4V.Encoder \
+	libOMX.SEC.AVC.Encoder
 
 PRODUCT_PACKAGES += \
 	audio.primary.aries \
@@ -95,7 +96,8 @@ PRODUCT_PACKAGES += \
 	audio.a2dp.default \
 	audio.usb.default \
 	sensors.aries \
-	lights.aries
+	lights.aries \
+	power.s5pc110
 
 PRODUCT_COPY_FILES += \
 	device/samsung/aries-common/libaudio/audio_policy.conf:system/etc/audio_policy.conf
@@ -107,7 +109,7 @@ PRODUCT_PACKAGES += \
 
 # Libs
 PRODUCT_PACKAGES += \
-	hwcomposer.aries \
+	hwcomposer.s5pc110 \
 	libstagefrighthw
 
 # Camera
@@ -153,7 +155,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
 # be reachable from resources or other mechanisms.
 PRODUCT_PROPERTY_OVERRIDES += \
        wifi.interface=wlan0 \
-       wifi.supplicant_scan_interval=20 \
+       wifi.supplicant_scan_interval=120 \
        ro.telephony.ril_class=SamsungRIL \
        ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock \
        mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
@@ -195,7 +197,7 @@ include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_COPY_FILES += \
-    device/samsung/aries-common/updater.sh:updater.sh
+    device/samsung/infuse4g/updater.sh:updater.sh
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care

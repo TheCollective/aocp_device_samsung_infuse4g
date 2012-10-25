@@ -34,6 +34,9 @@ on boot
 on fs
     mkdir /radio 0775 radio radio
     mount yaffs2 mtd@radio /radio
+    # We don't support encryption on yaffs (set before mount_all)
+    setprop ro.crypto.state unsupported
+    mount_all fstab.aries
 
 # data
     mount ext4 /dev/block/mmcblk0p2 /data wait nosuid noatime nodiratime noauto_da_alloc
@@ -249,14 +252,6 @@ on post-fs
     chmod 0660 /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/timed_output/vibrator/enable
 
-# allow system to modify cpufreq control files
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
 # GPS_CHIPSET_STE_CG2900  
 #STE: Added for CG2900 Support	
 #+Scott.Re-setup permission right
@@ -285,6 +280,13 @@ on post-fs
 	  chown system system /dev/cg2900_us_ctrl
       chmod 0770 /dev/cg2900_us_ctrl
 
+# Permissions for power HAL
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
+
+# trigger governor change uevent
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+
 on post-fs-data
 
 # wi-fi
@@ -300,8 +302,12 @@ on post-fs-data
 on property:ro.debuggable=1
     start adbd
 
-# Run sysinit
-    exec /system/bin/sysinit
+    # download cache
+    mkdir /data/download 0770 system cache
+
+    # logs
+    mkdir /data/log 0775 root root
+    chmod 0775 /data/log
 
     setprop vold.post_fs_data_done 1
 
@@ -360,7 +366,7 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 \
     disabled
     oneshot
 
-service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable-lpm --no2bytes --tosleep 50000 \
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm --no2bytes --tosleep 50000 \
 	--baudrate 3000000 --use_baudrate_for_download --patchram /system/bin/BCM4330B1_002.001.003.0043.0061.hcd \
 	--scopcm=0,0,0,0,0,0,0,3,3,0 /dev/s3c2410_serial0
     class main
