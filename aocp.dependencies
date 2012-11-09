@@ -13,7 +13,7 @@
         "target_path": "device/samsung/aries-common"
     }
     {
-        "repository": "android_device_samsung_infuse4g",
+        "repository": "aocp_device_samsung_infuse4g",
         "target_path": "device/samsung/infuse4g"
     }
 ]
