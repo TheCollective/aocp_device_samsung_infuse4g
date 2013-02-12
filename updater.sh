@@ -64,6 +64,31 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     /sbin/reboot now
     exit 0
 
+if ! /tmp/busybox test -e /.accept_wipe ; then
+        /tmp/busybox touch /.accept_wipe
+       
+        exit 9
+    fi
+    /tmp/busybox rm /.accept_wipe
+
+    # we also removed /datadata, so migrate data
+    /tmp/busybox mount /data
+
+    if /tmp/busybox test -h /data/data ; then
+      /tmp/busybox mkdir /datadata
+      /tmp/busybox mount /datadata
+      /tmp/busybox rm /data/data
+      /tmp/busybox mkdir /data/data
+      /tmp/busybox chown system.system /data/data
+      /tmp/busybox chmod 0771 /data/data
+      /tmp/busybox cp -a /datadata/* /data/data/
+      /tmp/busybox rm -r /data/data/lost+found
+    fi
+    /tmp/busybox umount /data
+
+    # clear datadata
+    /tmp/busybox umount -l /datadata
+    /tmp/erase_image datadata
 elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # we're running on a mtd device
 

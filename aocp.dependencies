@@ -6,7 +6,6 @@
     {
         "repository": "android_packages_apps_SamsungServiceMode",
         "target_path": "packages/apps/SamsungServiceMode",
-        "branch": "ics"
     },
     {
         "repository": "aocp_device_samsung_aries-common",
@@ -15,10 +14,6 @@
     {
         "repository": "aocp_device_samsung_infuse4g",
         "target_path": "device/samsung/infuse4g"
-    },
-    {
-        "repository": "proprietary_vendor_aries-common",
-        "target_path": "vendor/samsung/aries-common"
     },
     {
         "repository": "proprietary_vendor_infuse4g",

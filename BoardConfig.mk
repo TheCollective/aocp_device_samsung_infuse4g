@@ -25,12 +25,11 @@ BOARD_USES_LIBSECRIL_STUB := true
 # Use the non-open-source parts, if they're present
 -include vendor/samsung/infuse4g/BoardConfigVendor.mk
 
+TARGET_ARCH := arm
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
-TARGET_GLOBAL_CFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
@@ -80,7 +79,8 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 
 # Bootanimation
 TARGET_BOOTANIMATION_PRELOAD := true
-TARGET_BOOTANIMATION_TEXTURE_CACHE := false
+TARGET_BOOTANIMATION_TEXTURE_CACHE := true
+TARGET_BOOTANIMATION_USE_RGB565 := true
 
 # Wifi
 BOARD_LEGACY_NL80211_STA_EVENTS	 := true
@@ -99,6 +99,10 @@ WIFI_DRIVER_FW_PATH_P2P          := "/vendor/firmware/bcm4330_p2p.bin"
 WIFI_DRIVER_MODULE_NAME          := "dhd"
 WIFI_DRIVER_MODULE_ARG           := "firmware_path=/vendor/firmware/bcm4330_sta.bin nvram_path=/system/vendor/firmware/nvram_net.txt"
 WIFI_BAND                        := 802_11_ABG
+
+# BT
+BOARD_BLUEDROID_VENDOR_CONF := device/samsung/infuse4g/libbt_vndcfg.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/infuse4g/bluetooth
 
 # Vold
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
@@ -140,6 +144,10 @@ BOARD_ALLOW_EGL_HIBERNATION := true
 
 # hwcomposer: custom vsync ioctl
 BOARD_CUSTOM_VSYNC_IOCTL := true
+
+# Suspend in charger to disable capacitive keys
+BOARD_ALLOW_SUSPEND_IN_CHARGER := true
+
 # skia
 BOARD_USE_SKIA_LCDTEXT := true
 
