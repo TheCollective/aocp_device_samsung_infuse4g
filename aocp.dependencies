@@ -10,7 +10,7 @@
     {
         "repository": "aocp_device_samsung_aries-common",
         "target_path": "device/samsung/aries-common"
-    }
+    },
     {
         "repository": "aocp_device_samsung_infuse4g",
         "target_path": "device/samsung/infuse4g"
