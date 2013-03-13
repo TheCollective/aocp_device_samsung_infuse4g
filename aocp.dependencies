@@ -18,5 +18,9 @@
     {
         "repository": "proprietary_vendor_infuse4g",
         "target_path": "vendor/samsung/infuse4g"
+    },
+    {
+		"repository": "android_hardware_samsung",
+		"target_path": "hardware/samsung"
     }
 ]
