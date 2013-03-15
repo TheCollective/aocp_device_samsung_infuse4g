@@ -15,7 +15,7 @@
 # limitations under the License.
 
 DEVICE=infuse4g
-COMMON=aries-common
+COMMON=galaxys-common
 MANUFACTURER=samsung
 
 mkdir -p ../../../vendor/$MANUFACTURER/$DEVICE
@@ -48,7 +48,7 @@ PRODUCT_COPY_FILES := \\
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:/system/etc/permissions/android.software.live_wallpaper.xml
 
 # Pick up overlay for features that depend on non-open-source files
-DEVICE_PACKAGE_OVERLAYS := vendor/__MANUFACTURER__/aries-common/overlay
+DEVICE_PACKAGE_OVERLAYS := vendor/__MANUFACTURER__/galaxys-common/overlay
 
 \$(call inherit-product, vendor/__MANUFACTURER__/__DEVICE__/__DEVICE__-vendor-blobs.mk)
 \$(call inherit-product, vendor/__MANUFACTURER__/__COMMON__/aries-vendor-blobs.mk)
