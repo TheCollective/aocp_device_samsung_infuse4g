@@ -29,6 +29,7 @@ TARGET_ARCH := arm
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_ARCH_VARIANT_CPU := cortex-a8
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
 TARGET_NO_BOOTLOADER := true
@@ -95,7 +96,6 @@ WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/dhd.ko"
 WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/dhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_STA          := "/vendor/firmware/bcm4330_sta.bin"
 WIFI_DRIVER_FW_PATH_AP           := "/vendor/firmware/bcm4330_aps.bin"
-WIFI_DRIVER_FW_PATH_P2P          := "/vendor/firmware/bcm4330_p2p.bin"
 WIFI_DRIVER_MODULE_NAME          := "dhd"
 WIFI_DRIVER_MODULE_ARG           := "firmware_path=/vendor/firmware/bcm4330_sta.bin nvram_path=/system/vendor/firmware/nvram_net.txt"
 WIFI_BAND                        := 802_11_ABG
@@ -146,7 +146,7 @@ BOARD_ALLOW_EGL_HIBERNATION := true
 BOARD_CUSTOM_VSYNC_IOCTL := true
 
 # Suspend in charger to disable capacitive keys
-BOARD_ALLOW_SUSPEND_IN_CHARGER := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
 
 # skia
 BOARD_USE_SKIA_LCDTEXT := true

@@ -94,12 +94,6 @@
     <integer name="config_deskDockKeepsScreenOn">0</integer>
     <integer name="config_carDockKeepsScreenOn">1</integer>
 
-    <!-- Default color for notification LED is white -->
-    <color name="config_defaultNotificationColor">#ffffffff</color>
-
-    <!-- Default blink frequency for notification LED is 9 seconds. -->
-    <integer name="config_defaultNotificationLedOff">9000</integer>
-
     <string-array name="config_locationProviderPackageNames" translatable="false">
     <item>com.android.location.fused</item>
     
@@ -126,7 +120,6 @@
         <item>"mobile_dun,4,0,4,60000,true"</item>
         <item>"mobile_hipri,5,0,3,60000,true"</item>
         <item>"mobile_bluetooth,7,7,1,-1,true"</item>
-        <item>"wifi_p2p,13,1,0,-1,true"</item>
     </string-array>
 
     <!-- An Array of "[ConnectivityManager connectionType],
@@ -171,9 +164,6 @@
     <!-- Minimum screen brightness allowed by the power manager. -->
     <integer name="config_screenBrightnessDim">20</integer>
 
-    <!-- Boolean indicating whether the wifi chipset has p2p support -->
-    <!-- <bool translatable="false" name="config_wifi_p2p_support">true</bool> -->
-
     <!-- Vibrator pattern for a very short but reliable vibration for soft keyboard tap -->
     <integer-array name="config_keyboardTapVibePattern">
         <item>30</item>
@@ -189,9 +179,6 @@
 
     <!-- The default iface on which to monitor data use -->
     <string name="config_datause_iface">pdp0</string>
-
-    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveNotificationLed">true</bool>
 
     <!-- Disable the home key unlock setting -->
     <bool name="config_disableHomeUnlockSetting">false</bool>
