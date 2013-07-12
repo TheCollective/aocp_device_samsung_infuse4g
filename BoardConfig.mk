@@ -38,13 +38,11 @@ TARGET_NO_RADIOIMAGE := true
 TARGET_PROVIDES_INIT := true
 TARGET_BOARD_PLATFORM := s5pc110
 TARGET_BOOTLOADER_BOARD_NAME := aries
-TARGET_RECOVERY_INITRC := device/samsung/aries-common/recovery.rc
 
 BOARD_MOBILEDATA_INTERFACE_NAME = "pdp0"
 
 # Releasetools
-TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/aries-common/releasetools/aries_ota_from_target_files
-TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := ./device/samsung/aries-common/releasetools/aries_img_from_target_files
+TARGET_RELEASETOOLS_EXTENSIONS := device/samsung/aries-common
 
 TARGET_PROVIDES_LIBAUDIO := true
 
@@ -94,11 +92,11 @@ BOARD_HOSTAPD_DRIVER             := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_bcmdhd
 WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/dhd.ko"
 WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/dhd/parameters/firmware_path"
+WIFI_DRIVER_FW_PATH_AP           := "/vendor/firmware/bcm4330_apsta.bin"
 WIFI_DRIVER_FW_PATH_STA          := "/vendor/firmware/bcm4330_sta.bin"
-WIFI_DRIVER_FW_PATH_AP           := "/vendor/firmware/bcm4330_aps.bin"
 WIFI_DRIVER_MODULE_NAME          := "dhd"
-WIFI_DRIVER_MODULE_ARG           := "firmware_path=/vendor/firmware/bcm4330_sta.bin nvram_path=/system/vendor/firmware/nvram_net.txt"
 WIFI_BAND                        := 802_11_ABG
+WIFI_DRIVER_MODULE_ARG 		 := "iface_name=wlan0 firmware_path=/system/vendor/firmware/bcm4330_sta.bin nvram_path=/system/vendor/firmware/nvram_net.txt"
 
 # BT
 BOARD_BLUEDROID_VENDOR_CONF := device/samsung/infuse4g/libbt_vndcfg.txt
@@ -111,7 +109,7 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun%d
 # Recovery
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/aries-common/shbootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := device/samsung/infuse4g/shbootimg.mk
 TARGET_RECOVERY_PRE_COMMAND := "echo 1 > /cache/.startrecovery; sync;"
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/infuse4g/recovery/graphics.c
 BOARD_USES_BML_OVER_MTD := true
@@ -127,9 +125,6 @@ TARGET_SPECIFIC_HEADER_PATH := device/samsung/infuse4g/overlay/include
 # While our kernel doesn't support MMC ERASE, we do have a defective eMMC
 # chipset.  Suppress ERASE by recovery and update-binary just to be sure
 BOARD_SUPPRESS_EMMC_WIPE := true
-
-# legacy ts support
-BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 # Hardware rendering
 USE_OPENGL_RENDERER := true

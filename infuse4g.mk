@@ -40,9 +40,6 @@
 # application settings that are stored in resourced.
 DEVICE_PACKAGE_OVERLAYS := device/samsung/infuse4g/overlay
 
-PRODUCT_AAPT_CONFIG := normal hdpi
-PRODUCT_AAPT_PREF_CONFIG := hdpi
-
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
 	device/samsung/infuse4g/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
@@ -57,7 +54,9 @@ PRODUCT_COPY_FILES += \
 	device/samsung/infuse4g/init.aries.usb.rc:recovery/root/usb.rc \
 	device/samsung/infuse4g/ueventd.aries.rc:root/ueventd.aries.rc \
 	device/samsung/infuse4g/fstab.aries:root/fstab.aries \
-	device/samsung/infuse4g/lpm.rc:root/lpm.rc
+	device/samsung/aries-common/init.recovery.aries.rc:root/init.recovery.aries.rc \
+	device/samsung/infuse4g/lpm.rc:root/lpm.rc \
+	device/samsung/aries-common/setupdatadata.sh:root/sbin/setupdatadata.sh
 
 # Prebuilt kl keymaps
 PRODUCT_COPY_FILES += \
@@ -163,8 +162,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
        wifi.supplicant_scan_interval=120 \
        ro.telephony.ril_class=SamsungExynos3RIL \
        ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock \
-       mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
-       persist.sys.vold.switchexternal=1
+       mobiledata.interfaces=pdp0,wlan0,gprs,ppp0
+
+# Build kernel with linaro toolchain
+TARGET_KERNEL_CUSTOM_TOOLCHAIN_LINARO := linaro
+
 # dpi
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sf.lcd_density=240
