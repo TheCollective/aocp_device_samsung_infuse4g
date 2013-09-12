@@ -30,7 +30,7 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_ARCH_VARIANT_CPU := cortex-a8
-ARCH_ARM_HAVE_TLS_REGISTER := true
+TARGET_CPU_VARIANT := cortex-a8
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
@@ -72,7 +72,7 @@ TARGET_KERNEL_SOURCE := kernel/samsung/dempsey
 TARGET_KERNEL_CONFIG := aries_infuse4g_defconfig
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 7864320
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 300417024
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 419430400
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2013265920
 BOARD_FLASH_BLOCK_SIZE := 4096
 
@@ -110,9 +110,10 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/usb_mass_storage/lun%d
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_CUSTOM_BOOTIMG_MK := device/samsung/infuse4g/shbootimg.mk
-TARGET_RECOVERY_PRE_COMMAND := "echo 1 > /cache/.startrecovery; sync;"
 BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/infuse4g/recovery/graphics.c
 BOARD_USES_BML_OVER_MTD := true
+TARGET_RECOVERY_FSTAB := device/samsung/infuse4g/fstab.aries
+RECOVERY_FSTAB_VERSION := 2
 
 # Charging mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode_booting

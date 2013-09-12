@@ -25,7 +25,6 @@ on boot
 
     setprop ro.build.product aries
     setprop ro.product.device aries
-    setprop ro.radio.noril yes
 
 # fake some battery state
     setprop status.battery.state Slow
@@ -86,9 +85,6 @@ on post-fs
 
     insmod /system/lib/modules/vibrator.ko
     insmod /system/lib/modules/bthid.ko
-
-# disable ipv6 (causes issue when turning off wifi)
-    write /proc/sys/net/ipv6/conf/all/disable_ipv6 1
 
 # for sensor control
     chown system input /sys/class/input/input0/enable
@@ -284,7 +280,7 @@ on post-fs
       chmod 0770 /dev/cg2900_driver0
 	  chown system system /dev/cg2900_fm_audio
       chmod 0770 /dev/cg2900_fm_audio
-      chown system system /dev/cg2900_gnss
+      chown gps system /dev/cg2900_gnss
       chmod 0770 /dev/cg2900_gnss
       chown system system /dev/cg2900_hci_logger
       chmod 0770 /dev/cg2900_hci_logger	  
@@ -402,7 +398,7 @@ service ste-cg29xx_ctrl /system/vendor/bin/ste-cg29xx_ctrl -b 115200 /dev/s3c241
 #GPS_CHIPSET_STE_CG2900
 service agpsd /system/vendor/bin/agpsd
      class core
-     user root
+     user gps
      group system inet
      oneshot
 

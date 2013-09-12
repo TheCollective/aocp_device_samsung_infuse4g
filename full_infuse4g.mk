@@ -22,9 +22,7 @@
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 $(call inherit-product, device/samsung/infuse4g/infuse4g.mk)
-
-# Inherit from those products. Most specific first.
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 
 # Galaxy S uses high-density artwork where available
 PRODUCT_LOCALES += hdpi
@@ -33,5 +31,5 @@ PRODUCT_LOCALES += hdpi
 PRODUCT_NAME := aocp_infuse4g
 PRODUCT_DEVICE := infuse4g
 PRODUCT_BRAND := samsung
-PRODUCT_MANUFACTURER := Samsung
+PRODUCT_MANUFACTURER := samsung
 PRODUCT_MODEL := SGH-I997

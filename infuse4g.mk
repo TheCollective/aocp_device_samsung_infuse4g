@@ -42,7 +42,6 @@ DEVICE_PACKAGE_OVERLAYS := device/samsung/infuse4g/overlay
 
 # These are the hardware-specific configuration files
 PRODUCT_COPY_FILES := \
-	device/samsung/infuse4g/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
 	device/samsung/infuse4g/prebuilt/lib/egl/egl.cfg:system/lib/egl/egl.cfg \
 	device/samsung/infuse4g/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc \
 	device/samsung/infuse4g/prebuilt/usr/idc/melfas_touchkey.idc:system/usr/idc/melfas_touchkey.idc
@@ -74,9 +73,12 @@ PRODUCT_PACKAGES := \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-	make_ext4fs \
 	setup_fs \
 	bml_over_mtd
+
+# SGX540 is slower with the scissor optimization enabled
+PRODUCT_PROPERTY_OVERRIDES += \
+       ro.hwui.disable_scissor_opt=true
 
 # These are the OpenMAX IL configuration files
 PRODUCT_COPY_FILES += \
@@ -98,7 +100,8 @@ PRODUCT_PACKAGES += \
 	audio.usb.default \
 	sensors.aries \
 	lights.aries \
-	power.s5pc110
+	power.s5pc110 \
+	libnetcmdiface
 
 PRODUCT_COPY_FILES += \
 	device/samsung/infuse4g/libaudio/audio_policy.conf:system/etc/audio_policy.conf
@@ -154,6 +157,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES := \
 	ro.opengles.version=131072
 
+# Support for Browser's saved page feature. This allows
+# for pages saved on previous versions of the OS to be
+# viewed on the current OS.
+PRODUCT_PACKAGES += \
+    	libskia_legacy
+
 # These are the hardware-specific settings that are stored in system properties.
 # Note that the only such settings should be the ones that are too low-level to
 # be reachable from resources or other mechanisms.
@@ -162,7 +171,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
        wifi.supplicant_scan_interval=120 \
        ro.telephony.ril_class=SamsungExynos3RIL \
        ro.telephony.ril.v3=icccardstatus,datacall,signalstrength,facilitylock \
-       mobiledata.interfaces=pdp0,wlan0,gprs,ppp0
+       mobiledata.interfaces=pdp0,wlan0,gprs,ppp0 \
+       ro.bq.gpu_to_cpu_unsupported=1 \
 
 # Build kernel with linaro toolchain
 TARGET_KERNEL_CUSTOM_TOOLCHAIN_LINARO := linaro
