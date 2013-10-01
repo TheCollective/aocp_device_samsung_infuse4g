@@ -5,12 +5,21 @@
 # Combined GSM & CDMA version
 #
 
+SYSTEM_SIZE='629145600' # 600M
+
 check_mount() {
-    if ! /tmp/busybox grep -q $1 /proc/mounts ; then
-        /tmp/busybox mkdir -p $1
+    local MOUNT_POINT=`/tmp/busybox readlink $1`
+    if ! /tmp/busybox test -n "$MOUNT_POINT" ; then
+        # readlink does not work on older recoveries for some reason
+        # doesn't matter since the path is already correct in that case
+        /tmp/busybox echo "Using non-readlink mount point $1"
+        MOUNT_POINT=$1
+    fi
+    if ! /tmp/busybox grep -q $MOUNT_POINT /proc/mounts ; then
+        /tmp/busybox mkdir -p $MOUNT_POINT
         /tmp/busybox umount -l $2
-        if ! /tmp/busybox mount -t $3 $2 $1 ; then
-            /tmp/busybox echo "Cannot mount $1."
+        if ! /tmp/busybox mount -t $3 $2 $MOUNT_POINT ; then
+            /tmp/busybox echo "Cannot mount $1 ($MOUNT_POINT)."
             exit 1
         fi
     fi
@@ -19,6 +28,43 @@ check_mount() {
 set_log() {
     rm -rf $1
     exec >> $1 2>&1
+}
+
+warn_repartition() {
+    if ! /tmp/busybox test -e /.accept_wipe ; then
+        /tmp/busybox touch /.accept_wipe
+        ui_print
+        ui_print "============================================"
+        ui_print "This ROM uses an incompatible partition layout"
+        ui_print "Your /data will be wiped upon installation"
+        ui_print "Run this update.zip again to confirm install"
+        ui_print "============================================"
+        ui_print
+        exit 9
+    fi
+    /tmp/busybox rm /.accept_wipe
+}
+
+format_partitions() {
+    /lvm/sbin/lvm lvcreate -L ${SYSTEM_SIZE}B -n system lvpool
+    /lvm/sbin/lvm lvcreate -l 100%FREE -n userdata lvpool
+
+    # format data (/system will be formatted by updater-script)
+    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -l -16384 -a /data /dev/lvpool/userdata
+
+    # unmount and format datadata
+    /tmp/busybox umount -l /datadata
+    /tmp/erase_image datadata
+}
+
+fix_package_location() {
+    local PACKAGE_LOCATION=$1
+    # Remove leading /mnt for Samsung recovery
+    PACKAGE_LOCATION=${PACKAGE_LOCATION#/mnt}
+    # Convert to modern sdcard path
+    PACKAGE_LOCATION=`echo $PACKAGE_LOCATION | /tmp/busybox sed -e "s|^/sdcard|/storage/sdcard0|"`
+    PACKAGE_LOCATION=`echo $PACKAGE_LOCATION | /tmp/busybox sed -e "s|^/emmc|/storage/sdcard1|"`
+    echo $PACKAGE_LOCATION
 }
 
 # ui_print by Chainfire
@@ -66,18 +112,7 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
     # everything is logged into /mnt/sdcard/cyanogenmod_bml.log
     set_log /mnt/sdcard/cyanogenmod_bml.log
 
-    if ! /tmp/busybox test -e /.accept_wipe ; then
-        /tmp/busybox touch /.accept_wipe
-        ui_print
-        ui_print "============================================"
-        ui_print "This ROM uses an incompatible partition layout"
-        ui_print "Your /data will be wiped upon installation"
-        ui_print "Run this update.zip again to confirm install"
-        ui_print "============================================"
-        ui_print
-        exit 9
-    fi
-    /tmp/busybox rm /.accept_wipe
+    warn_repartition
 
     if $IS_GSM ; then
         # make sure efs is mounted
@@ -95,8 +130,7 @@ if /tmp/busybox test -e /dev/block/bml7 ; then
 
     # write the package path to sdcard cyanogenmod.cfg
     if /tmp/busybox test -n "$UPDATE_PACKAGE" ; then
-        PACKAGE_LOCATION=${UPDATE_PACKAGE#/mnt}
-        /tmp/busybox echo "$PACKAGE_LOCATION" > /mnt/sdcard/cyanogenmod.cfg
+        /tmp/busybox echo `fix_package_location $UPDATE_PACKAGE` > /mnt/sdcard/cyanogenmod.cfg
     fi
 
     # Scorch any ROM Manager settings to require the user to reflash recovery
@@ -137,7 +171,7 @@ elif /tmp/busybox test `/tmp/busybox cat /sys/class/mtd/mtd2/size` != "$MTD_SIZE
 
     # write the package path to sdcard cyanogenmod.cfg
     if /tmp/busybox test -n "$UPDATE_PACKAGE" ; then
-        /tmp/busybox echo "$UPDATE_PACKAGE" > /sdcard/cyanogenmod.cfg
+        /tmp/busybox echo `fix_package_location $UPDATE_PACKAGE` > /sdcard/cyanogenmod.cfg
     fi
 
     # inform the script that this is an old mtd upgrade
@@ -184,6 +218,18 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # everything is logged into /sdcard/cyanogenmod.log
     set_log /sdcard/cyanogenmod_mtd.log
 
+    # unmount system and data (recovery seems to expect system to be unmounted)
+    /tmp/busybox umount -l /system
+    /tmp/busybox umount -l /data
+
+    # Resize partitions
+    # (For first install, this will get skipped because device doesn't exist)
+    if /tmp/busybox test `/tmp/busybox blockdev --getsize64 /dev/mapper/lvpool-system` -lt $SYSTEM_SIZE ; then
+        warn_repartition
+        /lvm/sbin/lvm lvremove -f lvpool
+        format_partitions
+    fi
+
     if $IS_GSM ; then
         # create mountpoint for radio partition
         /tmp/busybox mkdir -p /radio
@@ -224,9 +270,6 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
             /tmp/bml_over_mtd.sh recovery 102 reservoir 2004 /tmp/recovery_kernel
         fi
 
-	# unmount system (recovery seems to expect system to be unmounted)
-	/tmp/busybox umount -l /system
-
         exit 0
     fi
 
@@ -236,22 +279,10 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     # remove the cyanogenmod.cfg to prevent this from looping
     /tmp/busybox rm -f /sdcard/cyanogenmod.cfg
 
-    # unmount system and data (recovery seems to expect system to be unmounted)
-    /tmp/busybox umount -l /system
-    /tmp/busybox umount -l /data
-
     # setup lvm volumes
     /lvm/sbin/lvm pvcreate $MMC_PART
     /lvm/sbin/lvm vgcreate lvpool $MMC_PART
-    /lvm/sbin/lvm lvcreate -L 400M -n system lvpool
-    /lvm/sbin/lvm lvcreate -l 100%FREE -n userdata lvpool
-
-    # format data (/system will be formatted by updater-script)
-    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -l -16384 -a /data /dev/lvpool/userdata
-
-    # unmount and format datadata
-    /tmp/busybox umount -l /datadata
-    /tmp/erase_image datadata
+    format_partitions
 
     # restart into recovery so the user can install further packages before booting
     /tmp/busybox touch /cache/.startrecovery
