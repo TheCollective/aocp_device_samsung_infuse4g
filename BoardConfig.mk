@@ -55,6 +55,9 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 
 BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/samsung/infuse4g/vibrator/tspdrv.c
 
+# Low Mem Dalvik
+TARGET_ARCH_LOWMEM := true
+
 # Video Devices
 BOARD_V4L2_DEVICE := /dev/video1
 BOARD_CAMERA_DEVICE := /dev/video0
@@ -120,6 +123,9 @@ BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/charging_mode
 BOARD_BATTERY_DEVICE_NAME := "battery"
 BOARD_CHARGER_RES := device/samsung/infuse4g/res/charger
 
+# We dont support new ril feature
+BOARD_RIL_NO_CELLINFOLIST := true
+
 # header overrides
 TARGET_SPECIFIC_HEADER_PATH := device/samsung/infuse4g/overlay/include
 
@@ -146,6 +152,22 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 
 # skia
 BOARD_USE_SKIA_LCDTEXT := true
+
+# SELinux
+BOARD_SEPOLICY_DIRS += \
+    device/samsung/infuse4g/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    bdaddr_read.te \
+    device.te \
+    domain.te \
+    file_contexts \
+    geomagneticd.te \
+    mediaserver.te \
+    orientationd.te \
+    property_contexts \
+    pvrsrvinit.te \
+    rild.te
 
 # Include aries specific stuff
 -include device/samsung/aries-common/Android.mk
