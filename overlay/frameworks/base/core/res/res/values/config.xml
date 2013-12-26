@@ -94,12 +94,6 @@
     <integer name="config_deskDockKeepsScreenOn">0</integer>
     <integer name="config_carDockKeepsScreenOn">1</integer>
 
-    <string-array name="config_locationProviderPackageNames" translatable="false">
-    <item>com.android.location.fused</item>
-    
-    <item>com.google.android.location</item>
-    </string-array>
-
     <!-- XXXXX NOTE THE FOLLOWING RESOURCES USE THE WRONG NAMING CONVENTION.
          Please don't copy them, copy anything else. -->
 
@@ -180,9 +174,6 @@
     <!-- The default iface on which to monitor data use -->
     <string name="config_datause_iface">pdp0</string>
 
-    <!-- Disable the home key unlock setting -->
-    <bool name="config_disableHomeUnlockSetting">false</bool>
-
     <!-- Boolean indicating if restoring network selection should be skipped -->
     <!-- The restoring is handled by modem if it is true -->
     <bool translatable="false" name="skip_restoring_network_selection">true</bool>
@@ -209,11 +200,23 @@
 	config to 7. -->
 	<integer name="config_deviceHardwareKeys">15</integer>
 
+    <!-- Maximum wallpaper width for devices with very high-res screen (1920x1200)
+         the wallpaper width suggestion by the launcher may be too large for
+         the GPU to handle. -->
+    <integer name="config_wallpaperMaxWidth">2048</integer>
+
     <!--Boolean to enable stk functionality on Samsung phones-->
     <bool name="config_samsung_stk">true</bool>
 
     <!-- Control whether a car dock event should override the default bluetooth
          audio routing, FORCE_BT_CAR_DOCK, with an analog dock, FORCE_ANALOG_DOCK. -->
     <bool name="config_forceAnalogCarDock">true</bool>
+ 
+    <!-- Disable lockscreen translucent decor by default -->
+    <bool name="config_enableLockScreenTranslucentDecor">true</bool>
 
+    <!-- Device configuration setting the /proc/sys/vm/extra_free_kbytes tunable
+         in the kernel. Default is 3 full-screen 32 bpp buffers, i.e. 4500KB
+         on Nexus S. Let's double this value. -->
+    <integer name="config_extraFreeKbytesAbsolute">9000</integer>
 </resources>

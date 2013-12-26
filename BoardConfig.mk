@@ -32,6 +32,8 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_ARCH_VARIANT_CPU := cortex-a8
 TARGET_CPU_VARIANT := cortex-a8
 
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
@@ -54,9 +56,6 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 
 BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/samsung/infuse4g/vibrator/tspdrv.c
-
-# Low Mem Dalvik
-TARGET_ARCH_LOWMEM := true
 
 # Video Devices
 BOARD_V4L2_DEVICE := /dev/video1
@@ -136,6 +135,9 @@ BOARD_SUPPRESS_EMMC_WIPE := true
 # Hardware rendering
 USE_OPENGL_RENDERER := true
 
+# OpenGL workaround
+BOARD_EGL_WORKAROUND_BUG_10194508 := true
+
 # TARGET_DISABLE_TRIPLE_BUFFERING can be used to disable triple buffering
 # on per target basis. On crespo it is possible to do so in theory
 # to save memory, however, there are currently some limitations in the
@@ -154,20 +156,21 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_USE_SKIA_LCDTEXT := true
 
 # SELinux
+POLICYVERS := 24
+
 BOARD_SEPOLICY_DIRS += \
     device/samsung/infuse4g/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     bdaddr_read.te \
     device.te \
-    domain.te \
     file_contexts \
-    geomagneticd.te \
-    mediaserver.te \
-    orientationd.te \
     property_contexts \
     pvrsrvinit.te \
     rild.te
+
+# Hardware tunables
+BOARD_HARDWARE_CLASS := device/samsung/infuse4g/cmhw/
 
 # Include aries specific stuff
 -include device/samsung/aries-common/Android.mk
